@@ -435,7 +435,7 @@ export default function Home() {
           >
             <div className="relative border-4 border-black bg-white p-4 punk-shadow-blue max-w-md w-full">
               <img 
-                src="/manus-storage/bab-0003_05c82f43.webp" 
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663030485714/LtkIxgeLKhfSSbuf.webp" 
                 alt="Алексей Парфун" 
                 className="w-full aspect-square object-cover border-2 border-black grayscale contrast-125"
               />
