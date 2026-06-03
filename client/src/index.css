@@ -1,0 +1,287 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+}
+
+:root {
+  /* Swiss Punk / Industrial Grunge Theme for Alexey Parfun */
+  --background: oklch(0.96 0.01 75); /* #F5F2EB - Warm paper/cream background */
+  --foreground: oklch(0.15 0 0);    /* #1A1A1A - Intense charcoal/black for readability */
+  
+  --card: oklch(0.98 0.005 75);      /* Pure warm white for cards */
+  --card-foreground: oklch(0.15 0 0);
+  
+  --popover: oklch(0.98 0.005 75);
+  --popover-foreground: oklch(0.15 0 0);
+  
+  --primary: oklch(0.45 0.29 265);   /* #0038FF - Vibrant Ultramarine Blue */
+  --primary-foreground: oklch(0.98 0 0); /* Pure white */
+  
+  --secondary: oklch(0.15 0 0);      /* Black */
+  --secondary-foreground: oklch(0.96 0.01 75); /* Cream */
+  
+  --muted: oklch(0.90 0.01 75);      /* Muted gray-cream */
+  --muted-foreground: oklch(0.45 0 0); /* Mid-gray */
+  
+  --accent: oklch(0.45 0.29 265);    /* Ultramarine Blue */
+  --accent-foreground: oklch(0.98 0 0);
+  
+  --destructive: oklch(0.55 0.22 25); /* Industrial dark red */
+  --destructive-foreground: oklch(0.98 0 0);
+  
+  --border: oklch(0.15 0 0);         /* Sharp 1px black borders */
+  --input: oklch(0.15 0 0);
+  --ring: oklch(0.45 0.29 265);      /* Blue focus ring */
+  
+  --radius: 0px; /* SHARP CORNERS ONLY - SWISS PUNK STYLE */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+  body {
+    @apply bg-background text-foreground selection:bg-primary selection:text-primary-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  
+  /* Heading typography using Unbounded font */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Unbounded', 'Oswald', Impact, sans-serif;
+    @apply font-black tracking-tight uppercase;
+  }
+}
+
+/* Reset container and basic flex settings */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 640px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    max-width: 1360px;
+  }
+}
+
+.flex {
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Custom Industrial Grunge / Swiss Punk utility classes using Tailwind v4 @utility directive */
+@utility punk-border {
+  border-width: 2px;
+  border-color: var(--foreground);
+}
+
+@utility punk-shadow {
+  box-shadow: 4px 4px 0px 0px var(--border);
+}
+
+@utility punk-shadow-blue {
+  box-shadow: 6px 6px 0px 0px var(--primary);
+}
+
+@utility punk-shadow-hover {
+  transition-property: all;
+  transition-duration: 150ms;
+  box-shadow: 4px 4px 0px 0px var(--border);
+  
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--primary);
+  }
+  
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px var(--border);
+  }
+}
+
+@utility punk-btn {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-width: 2px;
+  border-color: var(--foreground);
+  background-color: var(--background);
+  color: var(--foreground);
+  transition-property: all;
+  transition-duration: 150ms;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  user-select: none;
+  box-shadow: 4px 4px 0px 0px var(--border);
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--border);
+  }
+  
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px var(--border);
+  }
+}
+
+@utility punk-btn-primary {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-width: 2px;
+  border-color: var(--foreground);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  transition-property: all;
+  transition-duration: 150ms;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  user-select: none;
+  box-shadow: 4px 4px 0px 0px var(--border);
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--background);
+    color: var(--foreground);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--primary);
+  }
+  
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px var(--border);
+  }
+}
+
+@utility bg-paper {
+  background-color: var(--background);
+  background-image: 
+    radial-gradient(var(--border) 0.5px, transparent 0.5px), 
+    radial-gradient(var(--border) 0.5px, var(--background) 0.5px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  background-repeat: repeat;
+  background-blend-mode: multiply;
+  opacity: 0.03;
+}
+
+@utility tape-effect {
+  position: relative;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    width: 70px;
+    height: 24px;
+    background-color: rgba(243, 235, 215, 0.65);
+    backdrop-filter: blur(1px);
+    border-left: 1px dashed rgba(0,0,0,0.15);
+    border-right: 1px dashed rgba(0,0,0,0.15);
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.05);
+    transform: rotate(-3deg);
+    z-index: 10;
+  }
+}
+
+@utility tape-effect-right {
+  position: relative;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    width: 70px;
+    height: 24px;
+    background-color: rgba(243, 235, 215, 0.65);
+    backdrop-filter: blur(1px);
+    border-left: 1px dashed rgba(0,0,0,0.15);
+    border-right: 1px dashed rgba(0,0,0,0.15);
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.05);
+    transform: rotate(4deg);
+    z-index: 10;
+  }
+}
+
+@utility highlight-blue {
+  background: linear-gradient(120deg, rgba(0, 56, 255, 0.15) 0%, rgba(0, 56, 255, 0.18) 100%);
+  padding-left: 4px;
+  padding-right: 4px;
+  display: inline;
+}
+
+@utility highlight-black {
+  background: var(--border);
+  color: var(--background);
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  display: inline;
+}
