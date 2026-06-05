@@ -2,14 +2,6 @@
 <html lang="ru">
 
   <head>
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KNKTCGQ2');</script>
-    <!-- End Google Tag Manager -->
-
     <meta charset="UTF-8" />
     <meta
       name="viewport"
@@ -77,10 +69,7 @@
       }
     </script>
     
-    <!-- Google Fonts: Unbounded (Heavy headings) and Inter (Clean body) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet" />
+    <!-- Шрифты Unbounded и Inter подключены локально (см. client/src/fonts.css) -->
     
     <!-- Favicon placeholder using SVG -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230038FF'/%3E%3Ctext x='50' y='65' font-family='sans-serif' font-weight='bold' font-size='50' fill='white' text-anchor='middle'%3EП%3C/text%3E%3C/svg%3E" />
@@ -104,20 +93,11 @@
   </head>
 
   <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KNKTCGQ2"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
     <!-- Yandex.Metrika counter (noscript) -->
     <noscript><div><img src="https://mc.yandex.ru/watch/99958146" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
   </body>
 
 </html>
