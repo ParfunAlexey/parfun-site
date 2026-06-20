@@ -106,6 +106,59 @@ export default function Home() {
 
   const [visibleTgPostsCount, setVisibleTgPostsCount] = useState(3);
 
+  // Форма заявки
+  const [formName, setFormName] = useState("");
+  const [formContact, setFormContact] = useState("");
+  const [formConsent, setFormConsent] = useState(false);
+  const [formStatus, setFormStatus] = useState<"idle" | "sending" | "ok" | "error">("idle");
+  const [formError, setFormError] = useState("");
+
+  async function handleFormSubmit() {
+    setFormError("");
+    if (formName.trim().length < 2) {
+      setFormError("Укажите имя");
+      return;
+    }
+    if (formContact.trim().length < 3) {
+      setFormError("Укажите телефон или email для связи");
+      return;
+    }
+    if (!formConsent) {
+      setFormError("Необходимо согласие на обработку персональных данных");
+      return;
+    }
+    setFormStatus("sending");
+    try {
+      const res = await fetch("/form-submit.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formName.trim(),
+          contact: formContact.trim(),
+          consent: formConsent,
+          website: "", // honeypot
+        }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setFormStatus("ok");
+        setFormName("");
+        setFormContact("");
+        setFormConsent(false);
+        if (typeof window !== "undefined" && (window as any).ym) {
+          (window as any).ym(99958146, "reachGoal", "form_submit");
+        }
+      } else {
+        setFormStatus("error");
+        setFormError(data.error || "Не удалось отправить заявку");
+      }
+    } catch (e) {
+      setFormStatus("error");
+      setFormError("Не удалось отправить заявку. Попробуйте написать напрямую в Telegram.");
+    }
+  }
+
+
   // Dynamic fetching of Telegram posts from public channel preview via CORS proxy
   useEffect(() => {
     async function fetchTelegramPosts() {
@@ -113,17 +166,30 @@ export default function Home() {
       const targetUrl = `https://t.me/s/ParfunA?cb=${cb}`;
       let html = "";
 
-      // Try codetabs proxy first (raw HTML, no cache, highly reliable)
+      // Свой прокси на том же домене (PHP на reg.ru) — основной источник.
+      // Не зависит от зарубежных сервисов, в РФ работает стабильно.
       try {
-        const response = await fetch(`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(targetUrl)}`);
+        const response = await fetch(`/tg-feed.php?cb=${cb}`);
         if (response.ok) {
           html = await response.text();
         }
       } catch (e) {
-        console.warn("Codetabs proxy failed, trying fallback...", e);
+        console.warn("Own proxy failed, trying external fallbacks...", e);
       }
 
-      // Try allorigins as fallback (JSON wrapped, cached but cache-busted by cb param)
+      // Резервный фолбэк 1: codetabs
+      if (!html) {
+        try {
+          const response = await fetch(`https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(targetUrl)}`);
+          if (response.ok) {
+            html = await response.text();
+          }
+        } catch (e) {
+          console.warn("Codetabs proxy failed, trying next fallback...", e);
+        }
+      }
+
+      // Резервный фолбэк 2: allorigins
       if (!html) {
         try {
           const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
@@ -1179,6 +1245,102 @@ export default function Home() {
             </a>
           </motion.div>
 
+          {/* ФОРМА ЗАЯВКИ */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeInScroll}
+            className="mt-8 border-4 border-black p-8 md:p-12 bg-white punk-shadow-blue"
+          >
+            <div className="mb-6">
+              <span className="text-xs font-black uppercase tracking-widest bg-black text-white px-2 py-0.5 inline-block mb-4">
+                ОСТАВИТЬ ЗАЯВКУ
+              </span>
+              <h3 className="text-2xl md:text-3xl font-black font-display leading-tight">
+                НАПИШИТЕ — Я СВЯЖУСЬ С ВАМИ
+              </h3>
+              <p className="text-sm text-black/60 mt-2">
+                Оставьте имя и удобный способ связи. Отвечаю лично.
+              </p>
+            </div>
+
+            {formStatus === "ok" ? (
+              <div className="border-4 border-[#0038FF] bg-[#0038FF]/5 p-6 text-center">
+                <p className="text-lg font-black font-display uppercase">Заявка отправлена</p>
+                <p className="text-sm text-black/70 mt-2">
+                  Спасибо! Я свяжусь с вами в ближайшее время.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* honeypot — скрытое поле для ботов */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="hidden"
+                  aria-hidden="true"
+                />
+
+                <div>
+                  <input
+                    type="text"
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="Ваше имя"
+                    className="w-full border-4 border-black bg-white px-4 py-3 text-base font-medium placeholder:text-black/40 focus:outline-none focus:border-[#0038FF] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    value={formContact}
+                    onChange={(e) => setFormContact(e.target.value)}
+                    placeholder="Телефон или email"
+                    className="w-full border-4 border-black bg-white px-4 py-3 text-base font-medium placeholder:text-black/40 focus:outline-none focus:border-[#0038FF] transition-colors"
+                  />
+                </div>
+
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={formConsent}
+                    onChange={(e) => setFormConsent(e.target.checked)}
+                    className="mt-1 h-5 w-5 shrink-0 border-2 border-black accent-[#0038FF] cursor-pointer"
+                  />
+                  <span className="text-xs text-black/60 leading-relaxed">
+                    Я даю согласие на обработку моих персональных данных (имя и контакт) с целью обратной связи по заявке в соответствии с{" "}
+                    <button
+                      type="button"
+                      onClick={() => setShowPrivacyPolicy(true)}
+                      className="underline font-bold text-black hover:text-[#0038FF]"
+                    >
+                      Политикой обработки персональных данных
+                    </button>
+                    .
+                  </span>
+                </label>
+
+                {formError && (
+                  <p className="text-sm font-bold text-[#C00000]">{formError}</p>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleFormSubmit}
+                  disabled={formStatus === "sending" || !formConsent}
+                  className="w-full border-4 border-black bg-[#0038FF] text-white px-6 py-4 font-black uppercase tracking-widest text-sm hover:bg-black transition-colors duration-200 active:scale-[0.98] punk-shadow disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#0038FF]"
+                >
+                  {formStatus === "sending" ? "ОТПРАВКА..." : "ОТПРАВИТЬ ЗАЯВКУ"}
+                </button>
+              </div>
+            )}
+          </motion.div>
+
+
         </div>
       </section>
 
@@ -1261,7 +1423,7 @@ export default function Home() {
                 <h4 className="font-black text-xs uppercase tracking-wider">МЫ ИСПОЛЬЗУЕМ COOKIE</h4>
               </div>
               <p className="text-xs text-[#1A1A1A]/80 leading-relaxed">
-                Для анализа трафика и улучшения сайта мы используем Яндекс.Метрику и Google Tag Manager. Оставаясь на сайте, вы соглашаетесь с обработкой файлов cookie в соответствии с нашей{" "}
+                Для анализа трафика и улучшения сайта мы используем Яндекс.Метрику. Оставаясь на сайте, вы соглашаетесь с обработкой файлов cookie в соответствии с нашей{" "}
                 <button
                   onClick={() => setShowPrivacyPolicy(true)}
                   className="underline font-bold hover:text-[#0038FF] transition-colors inline-block"
@@ -1322,22 +1484,22 @@ export default function Home() {
                   
                   <h4 className="font-bold text-[#1A1A1A] uppercase">1. Какие данные обрабатываются</h4>
                   <p>
-                    Сайт не собирает ваши персональные данные через встроенные формы ввода. При клике на кнопки прямой связи вы переходите в сторонние приложения (Telegram или почтовый клиент), где общение происходит напрямую. Дополнительно сайт использует метрические системы Яндекс.Метрика и Google Tag Manager для сбора анонимных статистических данных (файлы cookie, IP-адрес, действия на сайте) с целью улучшения UX.
+                    При заполнении формы заявки на сайте вы добровольно предоставляете имя и контактные данные (телефон или адрес электронной почты). Эти данные обрабатываются исключительно для обратной связи по вашей заявке. Данные передаются на электронную почту, размещённую на сервере на территории Российской Федерации, и не сохраняются в сторонних сервисах. Дополнительно сайт использует метрическую систему Яндекс.Метрика для сбора анонимных статистических данных (файлы cookie, IP-адрес, действия на сайте) с целью улучшения работы сайта.
                   </p>
 
                   <h4 className="font-bold text-[#1A1A1A] uppercase">2. Цель обработки данных</h4>
                   <p>
-                    Анонимные метрические данные обрабатываются исключительно в целях веб-аналитики, оценки эффективности рекламных каналов, отслеживания кликов по кнопкам связи и скачивания медиакита для оптимизации работы сайта.
+                    Данные из формы заявки обрабатываются для связи с вами и ответа на обращение. Анонимные метрические данные обрабатываются в целях веб-аналитики, оценки эффективности рекламных каналов и оптимизации работы сайта. Данные не используются для иных целей и не передаются третьим лицам.
                   </p>
 
-                  <h4 className="font-bold text-[#1A1A1A] uppercase">3. Безопасность и передача данных</h4>
+                  <h4 className="font-bold text-[#1A1A1A] uppercase">3. Хранение и передача данных</h4>
                   <p>
-                    Мы не собираем, не храним на серверах сайта и не передаем ваши личные персональные данные третьим лицам. Прямое общение в Telegram с Алексеем Парфуном (@AVParfun) защищено внутренними протоколами сквозного шифрования Telegram Messenger.
+                    Персональные данные, переданные через форму, обрабатываются и хранятся на сервере, расположенном на территории Российской Федерации, в соответствии с требованиями Федерального закона № 152-ФЗ. Мы не передаём ваши данные третьим лицам, за исключением случаев, предусмотренных законодательством РФ. Прямое общение в Telegram защищено протоколами шифрования Telegram Messenger.
                   </p>
 
                   <h4 className="font-bold text-[#1A1A1A] uppercase">4. Права пользователя</h4>
                   <p>
-                    Вы можете ограничить сбор файлов cookie в настройках своего браузера. Для удаления ваших контактных данных, переданных в ходе личной переписки, вы можете обратиться напрямую к Алексею Парфуну в Telegram (@AVParfun).
+                    Вы вправе отозвать согласие на обработку персональных данных, запросить их изменение или удаление, обратившись к Алексею Парфуну по адресу pr@parfun.ru или в Telegram (@AVParfun). Вы также можете ограничить сбор файлов cookie в настройках своего браузера.
                   </p>
                 </div>
 

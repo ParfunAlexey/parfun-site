@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-06-09T12:00:00+03:00">
+  <shop>
+    <name>Алексей Парфун</name>
+    <company>Парфун Алексей Владимирович</company>
+    <url>https://parfun.ru</url>
+    <currencies>
+      <currency id="RUR" rate="1"/>
+    </currencies>
+    <categories>
+      <category id="1">Консалтинг и внедрение ИИ</category>
+    </categories>
+    <offers>
+
+      <offer id="strategy-session" available="true">
+        <url>https://parfun.ru/#services</url>
+        <price>500000</price>
+        <currencyId>RUR</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://parfun.ru/banners/strategy-session.jpg</picture>
+        <typePrefix>Стратегическая сессия</typePrefix>
+        <vendor>Алексей Парфун</vendor>
+        <model>Фокус-день по ИИ</model>
+        <name>Стратегическая сессия по внедрению ИИ в бизнес</name>
+        <description>Погружение в бизнес для поиска точек роста маржинальности через ИИ. Аудит бизнес-процессов, поиск скрытых потерь времени и денег, дорожная карта внедрения ИИ на 3–6 месяцев.</description>
+        <param name="Формат">Фокус-день</param>
+        <param name="Направление">Стратегия</param>
+      </offer>
+
+      <offer id="ai-accelerator" available="true">
+        <url>https://parfun.ru/#services</url>
+        <price>1500000</price>
+        <currencyId>RUR</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://parfun.ru/banners/ai-accelerator.jpg</picture>
+        <typePrefix>ИИ-Акселератор</typePrefix>
+        <vendor>Алексей Парфун</vendor>
+        <model>Программа на 3 месяца</model>
+        <name>ИИ-Акселератор: трансформация команды за 3 месяца</name>
+        <description>Полноценная трансформация работы команды. Кастомные планы обучения под отделы, система мотивации за ИИ-эффективность, еженедельное сопровождение и аудит прогресса.</description>
+        <param name="Формат">3 месяца</param>
+        <param name="Направление">Внедрение</param>
+      </offer>
+
+      <offer id="personal-advisory" available="true">
+        <url>https://parfun.ru/#services</url>
+        <price>300000</price>
+        <currencyId>RUR</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://parfun.ru/banners/personal-advisory.jpg</picture>
+        <typePrefix>Личный Advisory</typePrefix>
+        <vendor>Алексей Парфун</vendor>
+        <model>Ежемесячный ретейнер</model>
+        <name>Личный Advisory: сопровождение собственника по ИИ</name>
+        <description>Регулярное сопровождение собственника и топ-менеджмента. 2 личные сессии в месяц, постоянный доступ в Telegram для консультаций, независимый аудит сторонних ИИ-решений и подрядчиков.</description>
+        <param name="Формат">Ретейнер, в месяц</param>
+        <param name="Направление">Советник</param>
+      </offer>
+
+    </offers>
+  </shop>
+</yml_catalog>
